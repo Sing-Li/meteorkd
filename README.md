@@ -1,5 +1,6 @@
-[![Circle CI](https://circleci.com/gh/meteorhacks/meteord/tree/master.svg?style=svg)](https://circleci.com/gh/meteorhacks/meteord/tree/master)
-## MeteorD - Docker Runtime for Meteor Apps 
+*current wip - tuning for image size, performance, and deployment flexibility - updates soon*
+
+## MeteorKD - Tuned Flexible Kubernetes / Docker Container for Meteor Apps 
 
 There are two main ways you can use Docker with Meteor apps. They are:
 
