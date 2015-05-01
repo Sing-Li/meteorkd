@@ -1,5 +1,9 @@
 #!/bin/bash
 
+curl https://install.meteor.com | /bin/sh  
+
+rm *.tar.gz
+
 cd /app
 meteor build --directory /tmp/the-app
 

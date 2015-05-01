@@ -1,5 +1,7 @@
 set -e
 
+source /app/set_env.sh
+
 if [ -d /bundle ]; then
   cd /bundle
   tar xzf *.tar.gz
@@ -22,7 +24,6 @@ if [[ $REBULD_NPM_MODULES ]]; then
   bash /opt/meteord/rebuild_npm_modules.sh
   cd ../../
 fi
-
 export PORT=80
 echo "starting meteor app on port:$PORT"
 node main.js
