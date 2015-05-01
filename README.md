@@ -60,7 +60,7 @@ meteorsales         latest              58766aba8974        2 days ago          
 The same app with meteorkd:
 ~~~shell
 REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-meteorkd            latest              f40487b9e733        3 minutes ago       121.6 MB
+msaleskd            latest              290dcc1ba16e        30 seconds ago      133.8 MB
 ~~~
 
 Both apps were tested on a 50 instances over 3 bare-iron-minions k8s cluster and performed equally.
