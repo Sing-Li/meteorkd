@@ -53,14 +53,17 @@ Then you can access your app from the port 8099 of the host system.
 
 ### Result of goal-focused container tuning
 Using one of the popular containers, we built our sample Meteor app image. The image size was:
+
 ~~~shell
-REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-meteorsales         latest              58766aba8974        2 days ago          816.2 MB
+REPOSITORY  TAG     IMAGE ID     CREATED     VIRTUAL SIZE
+meteorsales latest  58766aba8974 2 days ago  816.2 MB
 ~~~
+
 The same app with meteorkd:
+
 ~~~shell
-REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
-msaleskd            latest              290dcc1ba16e        30 seconds ago      133.8 MB
+REPOSITORY  TAG     IMAGE ID     CREATED         VIRTUAL SIZE
+msaleskd    latest  290dcc1ba16e 30 seconds ago  133.8 MB
 ~~~
 
 Both apps were tested on a 50 instances over 3 bare-iron-minions k8s cluster and performed equally.
