@@ -1,26 +1,39 @@
-*current wip - tuning for image size, performance, and deployment flexibility - updates soon*
+## MeteorKD - Lean and Flexible Kubernetes / Docker Container for Meteor Apps
 
-## MeteorKD - Tuned Flexible Kubernetes / Docker Container for Meteor Apps 
+There are many hobbiest docker containers out there for running Meteor Apps. Some containers attempt to be everything to everyone, and have a uber-rich (and often complex) deployment time configurable features set.
 
-There are two main ways you can use Docker with Meteor apps. They are:
+meteorkd takes a different goal-focused approach to Meteor container crafting.  A very pragmatic one.
 
-1. Build a Docker image for your app
-2. Running a Meteor bundle with Docker
+Our goal is to tune our container for optimal image size, Kubernetes and Docker container-linking flexibility, plus build and runtime performance.
 
-**MeteorD supports these two ways. Let's see how to use MeteorD**
+The meteorkd container is not for you if you are:
 
-### 1. Build a Docker image for your app
+1. experimenting with writing Meteor apps
+2. looking for a one-container solution to all your Meteor deployment needs
 
-With this method, your app will be converted into a Docker image. Then you can simply run that image.  
+You will find other containers on the hub that may satisfy your needs.
 
-For that, you can use `meteorhacks/meteord` as your base image. Magically, that's only you've to do. Here's how to do it.
+### Kubernetes deployment, Docker container linking, and Mongo replica sets
+If you are using K8s to distribute tens, hundreds, or thousands of instances on bare-metal farms - you may find this container useful.  (Further optimizations are always possible, but need to be considered on a case-by-case basis.)
+
+Even if you're not using k8s, but working with a custom cloud solution via docker container linking, you might find this container useful.
+
+We know support for Mongo oplog tailing on arbitrary topology replica sets is important for many target users - and this container is built to facilitate (meaning: not hinder) it.  It works well with the official mongo image on docker hub - via container linking OR  k8s services.
+
+### Building a Docker image for your app with meteorkd
+Your app will be converted into a Docker image. Then you can distribute that image on k8s.  
+
+You use `singli/meteorkd` as your base image. That's the only thing you've to do. Here's how to do it.
 
 Add following `Dockerfile` into the root of your app:
 
 ~~~shell
-FROM meteorhacks/meteord
+FROM singli/meteorkd
 MAINTAINER Your Name
+ENV ROOT_URL  http://yourapp.com
 ~~~
+
+In your app directory, add a `set_env.sh` file and set all the environment varaibles that you need for k8s services references, or docker container linking.   `set_env.sh` will be parsed at runtime - just before startup of the meteor app.
 
 Then you can build the docker image with:
 
@@ -32,63 +45,18 @@ Then you can run your meteor image with
 
 ~~~shell
 docker run -d \
-    -e ROOT_URL=http://yourapp.com \
-    -e MONGO_URL=mongodb://url \
-    -e MONGO_OPLOG_URL=mongodb://oplog_url \
-    -p 8080:80 \
+    -p 8099:80 \
     yourname/app 
 ~~~
 
-Then you can access your app from the port 8080 of the host system.
+Then you can access your app from the port 8099 of the host system.
 
-### 2. Running a Meteor bundle with Docker
-
-For this you can directly use the MeteorD to run your meteor bundle. MeteorD can accept your bundle either from a local mount or from the web. Let's see:
-
-#### 2.1 From a Local Mount
-
+### Result of goal-focused container tuning
+Using one of the popular containers, we built our sample Meteor app image. The image size was:
 ~~~shell
-docker run -d \
-    -e ROOT_URL=http://yourapp.com \
-    -e MONGO_URL=mongodb://url \
-    -e MONGO_OPLOG_URL=mongodb://oplog_url \
-    -v /mybundle_dir:/bundle \
-    -p 8080:80 \
-    meteorhacks/meteord
+xxx
 ~~~
-
-With this method, MeteorD looks for the tarball version of the meteor bundle. So, you should build the meteor bundle for `os.linux.x86_64` and put it inside the `/bundle` volume. This is how you can build a meteor bundle.
-
+The same app with meteorkd:
 ~~~shell
-meteor build --architecture=os.linux.x86_64 ./
-~~~
-
-#### 2.1 From the Web
-
-You can also simply give URL of the tarball with `BUNDLE_URL` environment variable. Then MeteorD will fetch the bundle and run it. This is how to do it:
-
-~~~shell
-docker run -d \
-    -e ROOT_URL=http://yourapp.com \
-    -e MONGO_URL=mongodb://url \
-    -e MONGO_OPLOG_URL=mongodb://oplog_url \
-    -e BUNDLE_URL=http://mybundle_url_at_s3.tar.gz \
-    -p 8080:80 \
-    meteorhacks/meteord
-~~~
-
-
-### Rebuilding Binary Modules
-
-Sometimes, you need to rebuild binary npm modules. If so, expose `REBULD_NPM_MODULES` environment variable. It will take couple of seconds to complete the rebuilding process.
-
-~~~shell
-docker run -d \
-    -e ROOT_URL=http://yourapp.com \
-    -e MONGO_URL=mongodb://url \
-    -e MONGO_OPLOG_URL=mongodb://oplog_url \
-    -e BUNDLE_URL=http://mybundle_url_at_s3.tar.gz \
-    -e REBULD_NPM_MODULES=1 \
-    -p 8080:80 \
-    meteorhacks/meteord
+xxx
 ~~~
